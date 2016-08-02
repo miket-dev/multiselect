@@ -15,6 +15,5 @@ $(selector).multiselect();
 ```
 And if you does not use
 ```
-var element = document.getElementById(id);
-document.multiselect(element);
+document.multiselect(selector);
 ```
