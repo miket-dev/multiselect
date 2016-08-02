@@ -24,24 +24,16 @@
 Multiselect.prototype = {
 	//creates representation
 	_createUI: function () {
-		var el = document.getElementById(this._getIdentifier());
-		if (el) {
-			el.parentNode.removeChild(el);
-		}
+		m_helper.removeNode(this._getIdentifier());
 
 		var wrapper = this._createWrapper();
 		
-		var parent = this._item.parentNode;
-		if (this._item.nextElementSibling) {
-			parent.insertBefore(wrapper, this._item.nextElementSibling);
-		} else {
-			parent.appendChild(wrapper);
-		}
+		m_helper.insertAfter(wrapper, this._item);
 
 		wrapper.appendChild(this._createInputField());
 		wrapper.appendChild(this._createItemList());
-
-		this._item.style.display = 'none';
+		
+		m_helper.hide(this._item);
 	},
 
 	//creates base wrapper for control
@@ -54,24 +46,29 @@ Multiselect.prototype = {
 
 	//creates input field
 	_createInputField: function () {
-		var input = document.createElement('input');
-		input.className = 'multiselect-input';
-		input.setAttribute('type', 'text');
-		input.id = this._getInputFieldIdentifier();
-		
-		var label = document.createElement('label');
-		label.className = 'multiselect-count';
-		label.setAttribute('for', this._getInputFieldIdentifier());
-		label.id = this._getInputBadgeIdentifier();
+		var input = m_helper.textField({
+			id : this._getInputFieldIdentifier(),
+			class : 'multiselect-input'
+		}),
+		label = m_helper.label({
+			id : this._getInputBadgeIdentifier(),
+			class : 'multiselect-count',
+			attributes : {
+				for : this._getInputFieldIdentifier()
+			}
+		}),
+		dropDownArrow = m_helper.label({
+			class : 'multiselect-dropdown-arrow',
+			attributes : {
+				for : this._getInputFieldIdentifier()
+			}
+		}),
+		result = m_helper.div({
+			class : 'multiselect-input-div'
+		});
+
 		label.style.visibility = 'hidden';
 		label.innerHTML = 0;
-
-		var dropDownArrow = document.createElement('label');
-		dropDownArrow.setAttribute('for', this._getInputFieldIdentifier());
-		dropDownArrow.className = 'multiselect-dropdown-arrow';
-
-		var result = document.createElement('div');
-		result.className = 'multiselect-input-div';
 		
 		result.appendChild(input);
 		result.appendChild(label);
@@ -82,25 +79,26 @@ Multiselect.prototype = {
 
 	//creates element list
 	_createItemList: function () {
-		var items = this._getItems(this._item);
+		var list = m_helper.create({ tag : 'ul'});
 
-		var list = document.createElement('ul');
-
-		for (var i = 0; i < items.length; i++) {
-			var insertItem = this._createItem('li', items[i].id, items[i].text, items[i].selected);
+		var self = this;
+		m_helper.each(this._getItems(this._item), function(e) {
+			var insertItem = self._createItem('li', e.id, e.text, e.selected);
 			list.appendChild(insertItem);
 
 			var checkBox = insertItem.querySelector('input[type=checkbox]');
-			items[i].multiselectElement = checkBox;
-			checkBox.dataset.multiselectElement = JSON.stringify(items[i]);
-		}
+			e.multiselectElement = checkBox;
+			checkBox.dataset.multiselectElement = JSON.stringify(e);
+		});
 
 		var selectAll = this._createItem('span', -1, 'Select all');
-		var result = document.createElement('div');
-		result.id = this._getItemListIdentifier();
-		result.className = 'multiselect-list';
+		var result = m_helper.div({
+			id : this._getItemListIdentifier(),
+			class : 'multiselect-list'
+		});
+
 		result.appendChild(selectAll);
-		result.appendChild(document.createElement('hr'));
+		result.appendChild(m_helper.create({tag : 'hr' }));
 		result.appendChild(list);
 
 		return result;
@@ -108,18 +106,19 @@ Multiselect.prototype = {
 
 	//creates single list element
 	_createItem: function (wrapper, value, text, selected) {
-		var checkBox = document.createElement('input');
-		checkBox.className = 'multiselect-checkbox';
-		checkBox.setAttribute('type', 'checkbox');
-		checkBox.dataset.val = value;
-
-		var textBox = document.createElement('span');
+		var checkBox = m_helper.checkbox({
+			class : 'multiselect-checkbox',
+			data : {
+				val : value
+			}
+		}),
+		textBox = m_helper.create({ tag : 'span', class : 'multiselect-text'}),
+		result = m_helper.create({ tag: wrapper }),
+		label = m_helper.label();
+		
 		textBox.className = 'multiselect-text';
 		textBox.innerHTML = text;
 
-		var result = document.createElement(wrapper);
-		
-		var label = document.createElement('label');
 		label.appendChild(checkBox);
 		label.appendChild(textBox);
 		
@@ -128,15 +127,15 @@ Multiselect.prototype = {
 	},
 
 	_initSelectedFields: function () {
-		var items = this._getItems();
-		var itemResult = items.filter(function (obj) {
+		var itemResult = this._getItems().filter(function (obj) {
 			return obj.selected;
 		});
 
 		if (itemResult.length != 0) {
-			for (var i = 0; i < itemResult.length; i++) {
-				this.select(itemResult[i].id);
-			}
+			var self = this;
+			m_helper.each(itemResult, function(e) {
+				self.select(e.id);
+			});
 		} else {
 			this.selectAll();
 		}
@@ -145,19 +144,18 @@ Multiselect.prototype = {
 	select: function (val) {
 		var self = this;
 		if (val) {
-			var checkBoxes = document.getElementById(this._getIdentifier()).querySelectorAll('.multiselect-checkbox');
-			for	(var i = 0; i < checkBoxes.length; i++) {
-				var data = checkBoxes[i].dataset;
-				if (data.val == val) {
-					self._onCheckBoxChange(checkBoxes[i], self);
-				}
-			}
+			m_helper.each(document.getElementById(this._getIdentifier()).querySelectorAll('.multiselect-checkbox'),
+				function(e) {
+					if (e.dataset.val == val) {
+						self._onCheckBoxChange(e, self);
+					}
+				});
 		}
 	},
 
 	selectAll: function (val) {
 		var selectAllChkBox = document.querySelector('#' + this._getIdentifier() + ' .multiselect-checkbox');
-		selectAllChkBox.checked = true;
+		m_helper.check(selectAllChkBox);
 		this._onCheckBoxChange(selectAllChkBox, this);
 
 		this._hideList(this);
@@ -169,22 +167,12 @@ Multiselect.prototype = {
 		document.getElementById(self._getInputFieldIdentifier()).addEventListener('focus', function (event) {
 			self._showList(self);
 			document.getElementById(self._getInputFieldIdentifier()).value = '';
-
-			for (var i = 0; i < window.multiselects.length; i++) {
-				var e = window.multiselects[i];
-				if (document.getElementById(e._getItemListIdentifier()).offsetParent) {
-					var parent = event.target.parentElement;
-					while (parent && parent.tagName != 'BODY') {
-						if (parent.id == e._getIdentifier()) {
-							return;
-						}
-						
-						parent = parent.parentElement;
-					}
-					
-					e._hideList(e);
+			m_helper.each(window.multiselects, function(e) {
+				if (document.getElementById(e._getItemListIdentifier()).offsetParent &&
+					m_helper.parent(event.target, e._getIdentifier())) {
+					e._hideList(self);
 				}
-			}
+			});
 		});
 
 		document.getElementById(self._getInputFieldIdentifier()).addEventListener('click', function () {
@@ -195,59 +183,42 @@ Multiselect.prototype = {
 		document.getElementById(self._getIdentifier()).addEventListener('click', function (event) {
 			event = event || window.event;
 			var target = event.target || event.srcElement;
-			var parent = event.target.parentElement;
-			while (parent && parent.tagName != 'BODY') {
-				if (parent.id == self._getIdentifier()) {
-					return;
-				}
-
-				parent = parent.parentElement;
+			if (m_helper.parent(target, self._getIdentifier())) {
+				event.stopPropagation();				
 			}
-	
-			event.stopPropagation();
 		});
 
 		document.getElementById(self._getItemListIdentifier()).addEventListener('mouseover', function () {
 			self._showList(self);
 		});
 		
-		var chkboxes = document.querySelectorAll('#' + self._getIdentifier() + ' .multiselect-checkbox');
-		for(var i = 0; i< chkboxes.length; i++) {
-			chkboxes[i].addEventListener('change', function(event) {
-				self._onCheckBoxChange(this, self, event);
+		m_helper.each(document.getElementById(self._getIdentifier()).querySelectorAll('.multiselect-checkbox'),
+			function(e) {
+				e.addEventListener('change', function(event) {
+					self._onCheckBoxChange(e, self, event);
+				});
 			});
-		}
 
 		var onInput = function () {
 			var text = this.value.toLowerCase();
 			if (!text || text == '') {
-				document.querySelector('#' + self._getItemListIdentifier() + ' > span').style.display = 'block';
-				document.querySelector('#' + self._getItemListIdentifier() + ' > hr').style.display = 'block';
-				var innerItems = document.querySelectorAll('#' + self._getItemListIdentifier() + ' li');
-				for	(var i = 0; i < innerItems.length; i++) {
-					innerItems[i].style.display = 'block';
-				}
+				m_helper.show(document.querySelector('#' + self._getItemListIdentifier() + ' > span'));
+				m_helper.show(document.querySelector('#' + self._getItemListIdentifier() + ' > hr'));
+				m_helper.showAll(document.querySelectorAll('#' + self._getItemListIdentifier() + ' li'));
 			} else {
-				document.querySelector('#' + self._getItemListIdentifier() + ' > span').style.display = 'none';
-				document.querySelector('#' + self._getItemListIdentifier() + ' > hr').style.display = 'none';
+				m_helper.hide(document.querySelector('#' + self._getItemListIdentifier() + ' > span'));
+				m_helper.hide(document.querySelector('#' + self._getItemListIdentifier() + ' > hr'));
 
-				var array = document.querySelectorAll('#' + self._getItemListIdentifier() + ' li span');
-
-				array = Array.prototype.filter.call(array, function (obj) {
+				var array = Array.prototype.filter.call(document.querySelectorAll('#' + self._getItemListIdentifier() + ' li span'), 
+				function (obj) {
 					return obj.innerHTML.toLowerCase().indexOf(text) > -1;
 				});
+				
+				m_helper.hideAll(document.querySelectorAll('#' + self._getItemListIdentifier() + ' li'));
 
-				var lis = document.querySelectorAll('#' + self._getItemListIdentifier() + ' li');
-
-				for (var i = 0; i < lis.length; i++) {
-					var el = lis[i];
-					el.style.display = 'none';
-				}
-
-				for (var i = 0; i < array.length; i++) {
-					var el = array[i];
-					el.parentElement.parentElement.style.display = 'block';
-				}
+				m_helper.each(array, function(e) {
+					m_helper.show(e.parentElement.parentElement);
+				});
 			}
 		}
 		
@@ -256,65 +227,77 @@ Multiselect.prototype = {
 	},
 
 	_onCheckBoxChange: function (checkbox, self, event) {
-		var checkboxData = checkbox.dataset;
-		var checked = checkbox.checked;
-		if (!checkboxData.multiselectElement) {
-			var items = self._getItems();
-
-			if (checked) {
-				self._itemCounter = items.length;
-				for (var i = 0; i < items.length; i++) {
-					items[i].multiselectElement.parentElement.parentElement.classList.add('active');
-					this._item.options[items[i].index].setAttribute('selected', 'selected');
-					items[i].multiselectElement.checked = true;
-				}
-			}
-			else {
-				self._itemCounter = 0;
-				for (var i = 0; i < items.length; i++) {
-					items[i].multiselectElement.parentElement.parentElement.classList.remove('active');
-					this._item.options[items[i].index].removeAttribute('selected');
-					items[i].multiselectElement.checked = false;
-				}
-			}
+		if (!checkbox.dataset.multiselectElement) {
+			self._performSelectAll(checkbox, self);
 		}
 		else {
-			var item = JSON.parse(checkbox.dataset.multiselectElement);
-			if (checked) {
-				self._itemCounter++;
-				this._item.options[item.index].setAttribute('selected', 'selected');
-				checkbox.parentElement.parentElement.classList.add('active');
-			}
-			else {
-				self._itemCounter--;
-				this._item.options[item.index].removeAttribute('selected');
-				checkbox.parentElement.parentElement.classList.remove('active');
-			}
-
-			var allChkBox = document.getElementById(self._getItemListIdentifier()).querySelector('input[type=checkbox]');
-			if (self._itemCounter == self._getItems().length) {
-				allChkBox.checked = true;
-			}
-			else if (allChkBox.checked) {
-				allChkBox.checked = false;
-			}
+			self._performSelectItem(checkbox, self);
+			
+			self._updateSelectAll(self);
 		}
 
 		self._forceUpdate();
 	},
-
-	_hideList: function (context, event) {
-		document.getElementById(context._getItemListIdentifier()).classList.remove('active');
-
-		document.getElementById(context._getItemListIdentifier()).querySelector('span').style.display = 'block';
-		document.getElementById(context._getItemListIdentifier()).querySelector('hr').style.display = 'block';
-		var lis = document.getElementById(context._getItemListIdentifier()).querySelectorAll('li');
-		if (lis.length != 0) {
-			for (var i = 0; i < lis.length; i++) {
-				lis[i].style.display = 'block';
-			}
+	
+	_performSelectItem : function(checkbox, self) {
+		var item = JSON.parse(checkbox.dataset.multiselectElement);
+		if (checkbox.checked) {
+			self._itemCounter++;
+			m_helper.select(this._item.options[item.index]);
+			m_helper.setActive(checkbox.parentElement.parentElement);
 		}
+		else {
+			self._itemCounter--;
+			m_helper.deselect(this._item.options[item.index]);
+			m_helper.setUnactive(checkbox.parentElement.parentElement);
+		}
+	},
+	
+	_performSelectAll : function(checkbox, self) {
+		var items = self._getItems();
 
+		if (checkbox.checked) {
+			self._itemCounter = items.length;
+			m_helper.each(items, function(e) {
+				m_helper.setActive(e.multiselectElement.parentElement.parentElement);
+				m_helper.select(self._item.options[e.index]);
+				m_helper.check(e.multiselectElement);
+			});
+		}
+		else {
+			self._itemCounter = 0;
+			m_helper.each(items, function(e) {
+				e.multiselectElement.parentElement.parentElement.classList.remove('active');
+				self._item.options[e.index].removeAttribute('selected');
+				m_helper.uncheck(e.multiselectElement);
+			});
+		}
+	},
+	
+	_updateSelectAll :function(self) {
+		var allChkBox = document.getElementById(self._getItemListIdentifier()).querySelector('input[type=checkbox]');
+		if (self._itemCounter == self._getItems().length) {
+			allChkBox.checked = true;
+		}
+		else if (allChkBox.checked) {
+			allChkBox.checked = false;
+		}
+	},
+	
+	_hideList: function (context, event) {
+		m_helper.setUnactive(document.getElementById(context._getItemListIdentifier()));
+		
+		m_helper.show(document.getElementById(context._getItemListIdentifier()).querySelector('span'));
+		m_helper.show(document.getElementById(context._getItemListIdentifier()).querySelector('hr'));
+		m_helper.showAll(document.getElementById(context._getItemListIdentifier()).querySelectorAll('li'));
+
+		context._updateText(context);
+
+		if (event)
+			event.stopPropagation();
+	},
+	
+	_updateText : function(context) {
 		var activeItems = document.getElementById(context._getItemListIdentifier()).querySelectorAll('ul .active');
 		if (activeItems.length > 0) {
 			var val = '';
@@ -333,13 +316,10 @@ Multiselect.prototype = {
 			}
 			document.getElementById(context._getInputFieldIdentifier()).value = val;
 		}
-
-		if (event)
-			event.stopPropagation();
 	},
 
 	_showList: function (context) {
-		document.getElementById(context._getItemListIdentifier()).classList.add('active');
+		m_helper.setActive(document.getElementById(context._getItemListIdentifier()));
 	},
 
 	//updates counter
@@ -382,7 +362,8 @@ Multiselect.prototype = {
 	_getItems: function () {
 		if (this._items == undefined) {
 			var result = [];
-			var opts = this._item.querySelectorAll('option');
+			var opts = this._item.options;
+			
 			for	(var i = 0; i < opts.length; i++) {
 				var insertItem = {
 					id: opts[i].value,
