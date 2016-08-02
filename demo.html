@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Pure js multiselect demo</title>
+
+	<link href="multiselect.css" rel="stylesheet"/>
+	<script src="multiselect.core.js"></script>
+	<script src="multiselect.js"></script>
+
+</head>
+<body>
+<select id='testSelect1' multiple>
+	<option value='1'>Item 1</option>
+	<option value='2'>Item 2</option>
+	<option value='3'>Item 3</option>
+	<option value='4'>Item 4</option>
+	<option value='5'>Item 5</option>
+</select>
+
+<script>
+	document.multiselect(document.getElementById('testSelect1'));
+</script>
+</body>
