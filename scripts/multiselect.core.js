@@ -1,11 +1,13 @@
 ﻿function Multiselect(item) {
 	//if item is not a select - it is an error
-	if (typeof($) != 'undefined' && !$(item).is('select')) {
+	if ((typeof($) != 'undefined' && !$(item).is('select')) ||
+		(typeof($) == 'undefined' && item.tagName != 'SELECT')) {
 		throw "Multiselect: passed object must be a select";
 	}
-
-	if (typeof($) == 'undefined' && item.tagName != 'SELECT') {
-		throw "Multiselect: passed object must be a select";
+	
+	if ((typeof($) != 'undefined' && !$(item).attr('multiple')) ||
+		(typeof($) == 'undefined' && !item.hasAttribute('multiple'))) {
+		throw "Multiselect: passed object should contain 'multiple' attribute";	
 	}
 
 	if (typeof ($) != 'undefined') {
