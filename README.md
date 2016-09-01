@@ -20,19 +20,24 @@ document.multiselect(selector);
 ```
 ###Information on basic capabilities
 **Displaying count of already selected items**
+
 Exactly displaying spends O(1) time for update counter.
 The object contains variable `_counter`  which updates with every interaction (selecting, deselecting item, or selecting, deselecting all items).
 So, for displaying it calls only a single method for convert `_counter` into string representation.
 
 **Substring search through the list**
+
 Substring search does not use jquery and performs comparisons via pure js.
 You can check https://jsfiddle.net/gd36tzhg/3/ for comparison between jquery and native javascript implementation.
 
 **Efficient performance on large data**
+
 Refering to previous paragraph, you can check comparison between jquery and native javascript performance on large data.
 
 **Select/Deselect all**
+
 Multiselect object provides public method for selecting/deselecting all data. So you can simply call it via code, or click on `Select All` checkbox via browser.
 
 **Posting to server without any extensions**
+
 Multiselect is just a wrapper for built-in selects. So, you should pass `select[multiple]` and every interaction with dropdown list of multiselect will reflect in options of passed `select`. When you perform `POST` request, the original `select[multiple]` will be posted instead of generation of fake input fields.
