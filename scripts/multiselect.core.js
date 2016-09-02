@@ -141,6 +141,8 @@ Multiselect.prototype = {
 		} else {
 			this.selectAll();
 		}
+		
+		this._hideList(this);
 	},
 
 	select: function (val) {
@@ -149,6 +151,7 @@ Multiselect.prototype = {
 			m_helper.each(document.getElementById(this._getIdentifier()).querySelectorAll('.multiselect-checkbox'),
 				function(e) {
 					if (e.dataset.val == val) {
+						m_helper.check(e);
 						self._onCheckBoxChange(e, self);
 					}
 				});
@@ -159,8 +162,6 @@ Multiselect.prototype = {
 		var selectAllChkBox = document.querySelector('#' + this._getIdentifier() + ' .multiselect-checkbox');
 		m_helper.check(selectAllChkBox);
 		this._onCheckBoxChange(selectAllChkBox, this);
-
-		this._hideList(this);
 	},
 
 	//append required events

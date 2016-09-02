@@ -150,6 +150,16 @@ if (!m_helper)
 		
 		uncheck : function(element) {
 			element.checked = false;
+		},
+		
+		click : function(element) {
+			if (element.fireEvent) {
+				el.fireEvent('onclick');
+			} else {
+				var evObj = document.createEvent('Events');
+				evObj.initEvent('click', true, false);
+				element.dispatchEvent(evObj);
+			}
 		}
 	};
 }
