@@ -137,10 +137,12 @@ if (!m_helper)
 		},
 		
 		select :function (element) {
+			element.selected = true;
 			element.setAttribute('selected', 'selected');
 		},
 		
 		deselect : function (element) {
+			element.selected = false;
 			element.removeAttribute('selected');
 		},
 		
