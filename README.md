@@ -2,14 +2,14 @@
 This project presents css + pure js implementation for multiselect html control.
 
 Repository contains source code and simple demo.
-##Capabilities
+## Capabilities
 * Displaying count of already selected items
 * Substring search through the list
 * Efficient performance on large data (via pure javascript, without any frameworks)
 * Select/Deselect all
 * Posting to server without any extensions
 
-##Sample Usage
+## Sample Usage
 If you are using jQuery you can simply call
 ```
 $(selector).multiselect();
@@ -18,7 +18,7 @@ And if you do not use
 ```
 document.multiselect(selector);
 ```
-###Information on basic capabilities
+### Information on basic capabilities
 **Displaying count of already selected items**
 
 Exactly displaying spends O(1) time for update counter.
