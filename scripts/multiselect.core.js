@@ -10,11 +10,7 @@
 		throw "Multiselect: passed object should contain 'multiple' attribute";	
 	}
 
-	if (typeof ($) != 'undefined') {
-		this._item = item[0];
-	} else {
-		this._item = item;
-	}
+	this._item = item;
 
 	this._createUI();
 
