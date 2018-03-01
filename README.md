@@ -11,7 +11,7 @@ Repository contains source code and simple demo.
 
 ## Sample Usage
 In this section there are examples of code for usage of basic features
-###jQuery
+### jQuery
 ```
 $(selector).multiselect();
 ```
@@ -25,7 +25,7 @@ Select and deselect particular element with value == 1
 $(selector).multiselect().select(1);
 $(selector).multiselect().deselect(1);
 ```
-###Without jQuery
+### Without jQuery
 ```
 document.multiselect(selector);
 ```
