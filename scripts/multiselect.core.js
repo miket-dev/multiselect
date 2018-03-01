@@ -146,22 +146,47 @@ Multiselect.prototype = {
 	},
 
 	select: function (val) {
+		this._toggle(val, true);
+	},
+	
+	deselect: function(val) {
+		this._toggle(val, false);
+	},
+	
+	_toggle: function(val, setCheck) {
 		var self = this;
 		if (val) {
 			m_helper.each(document.getElementById(this._getIdentifier()).querySelectorAll('.multiselect-checkbox'),
 				function(e) {
 					if (e.dataset.val == val) {
-						m_helper.check(e);
-						self._onCheckBoxChange(e, self);
+						if (setCheck && !e.checked) {
+							m_helper.check(e);
+							self._onCheckBoxChange(e, self);
+						} else if (!setCheck && e.checked) {
+							m_helper.uncheck(e);
+							self._onCheckBoxChange(e, self);
+						}
 					}
 				});
-		}
+				
+			self._updateText(self);
+		}		
 	},
 
 	selectAll: function (val) {
 		var selectAllChkBox = document.querySelector('#' + this._getIdentifier() + ' .multiselect-checkbox');
 		m_helper.check(selectAllChkBox);
 		this._onCheckBoxChange(selectAllChkBox, this);
+		
+		this._updateText(this);
+	},
+	
+	deselectAll : function() {
+		var selectAllChkBox = document.querySelector('#' + this._getIdentifier() + ' .multiselect-checkbox');
+		m_helper.uncheck(selectAllChkBox);
+		this._onCheckBoxChange(selectAllChkBox, this);
+		
+		this._updateText(this);
 	},
 
 	//append required events
@@ -313,12 +338,12 @@ Multiselect.prototype = {
 			if (val.length > 20) {
 				val = val.substr(0, 17) + '...';
 			}
-
-			if (activeItems.length == document.getElementById(context._getItemListIdentifier()).querySelectorAll('ul li').length) {
-				val = 'All selected';
-			}
-			document.getElementById(context._getInputFieldIdentifier()).value = val;
 		}
+		
+		if (activeItems.length == document.getElementById(context._getItemListIdentifier()).querySelectorAll('ul li').length) {
+			val = 'All selected';
+		}
+		document.getElementById(context._getInputFieldIdentifier()).value = val ? val : '';		
 	},
 
 	_showList: function (context) {

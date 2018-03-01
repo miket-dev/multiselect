@@ -10,13 +10,34 @@ Repository contains source code and simple demo.
 * Posting to server without any extensions
 
 ## Sample Usage
-If you are using jQuery you can simply call
+In this section there are examples of code for usage of basic features
+###jQuery
 ```
 $(selector).multiselect();
 ```
-And if you do not use
+Programmatically selecting and deselecting all items:
+```
+$(selector).multiselect().selectAll();
+$(selector).multiselect().deselectAll();
+```
+Select and deselect particular element with value == 1
+```
+$(selector).multiselect().select(1);
+$(selector).multiselect().deselect(1);
+```
+###Without jQuery
 ```
 document.multiselect(selector);
+```
+Selecting and deselecting all items:
+```
+document.multiselect(selector).selectAll();
+document.multiselect(selector).deselectAll();
+```
+Select and deselect particular element with value == 1
+```
+document.multiselect(selector).select(1);
+document.multiselect(selector).deselect(1);
 ```
 ### Information on basic capabilities
 **Displaying count of already selected items**
