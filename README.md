@@ -25,6 +25,10 @@ Select and deselect particular element with value == 1
 $(selector).multiselect().select(1);
 $(selector).multiselect().deselect(1);
 ```
+Retrieve selected values
+```
+$(selector).val(); //any change goes immediately to original select[mulitple]
+```
 ### Without jQuery
 ```
 document.multiselect(selector);
@@ -38,6 +42,10 @@ Select and deselect particular element with value == 1
 ```
 document.multiselect(selector).select(1);
 document.multiselect(selector).deselect(1);
+```
+Retrieve selected values
+```
+document.querySelector(selector).value; //any change goes immediately to original select[mulitple]
 ```
 ### Information on basic capabilities
 **Displaying count of already selected items**
