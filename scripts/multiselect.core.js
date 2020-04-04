@@ -46,7 +46,10 @@ Multiselect.prototype = {
 	_createInputField: function () {
 		var input = m_helper.textField({
 			id : this._getInputFieldIdentifier(),
-			class : 'multiselect-input'
+			class : 'multiselect-input',
+			attributes : {
+				autocomplete: 'off'
+			}
 		}),
 		label = m_helper.label({
 			id : this._getInputBadgeIdentifier(),
