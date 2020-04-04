@@ -1,4 +1,4 @@
-﻿function Multiselect(item) {
+﻿function Multiselect(item, opts) {
 	//if item is not a select - it is an error
 	if ((typeof($) != 'undefined' && !$(item).is('select')) ||
 		(typeof($) == 'undefined' && item.tagName != 'SELECT')) {
@@ -15,8 +15,6 @@
 	this._createUI();
 
 	this._appendEvents();
-
-	this._initSelectedFields();
 }
 
 Multiselect.prototype = {
@@ -329,7 +327,7 @@ Multiselect.prototype = {
 		self._itemCounter = 0;
 		m_helper.each(items, function(e) {
 			e.multiselectElement.parentElement.parentElement.classList.remove('active');
-			self._item.options[e.index].removeAttribute('selected');
+			m_helper.deselect(self._item.options[e.index]);
 			m_helper.uncheck(e.multiselectElement);
 		});
 		return false;
