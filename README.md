@@ -11,41 +11,50 @@ Repository contains source code and simple demo.
 
 ## Sample Usage
 In this section there are examples of code for usage of basic features
-### jQuery
+### Initialization
 ```
-$(selector).multiselect();
+$(selector).multiselect(); // with jQuery
+document.multiselect(selector); // without jQuery
 ```
-Programmatically selecting and deselecting all items:
+### Methods
+Any changes to selected set are populated into original `select[multiple]`. So, to retrieve the changes you can call the following:
 ```
+$(selector).val(); // with jQuery
+document.querySelector(selector).value; // without jQuery
+```
+It provides the following methods:
+| Method  | Description |
+| ------------- | ------------- |
+| `selectAll()`  | Programmatically selects all elements  |
+| `deselectAll()` | Programmatically deselects all elements  |
+| `select(value)`  | Programmatically selects the element for option with passed value  |
+| `deselect()` | Programmatically deselects the element for option with passed value  |
+| `setCheckBoxClick(value, handler)` | Sets the click listener for checkbox with particular value, where `value=='checkboxAll'` stands for 'Select All' checkbox. Handler accepts two arguments - target and args. See examples below |
+#### Examples
+Programmatically selecting and deselecting items:
+```
+// with jQuery
 $(selector).multiselect().selectAll();
 $(selector).multiselect().deselectAll();
-```
-Select and deselect particular element with value == 1
-```
-$(selector).multiselect().select(1);
-$(selector).multiselect().deselect(1);
-```
-Retrieve selected values
-```
-$(selector).val(); //any change goes immediately to original select[mulitple]
-```
-### Without jQuery
-```
-document.multiselect(selector);
-```
-Selecting and deselecting all items:
-```
+$(selector).multiselect().select(1); // select element with value == 1
+$(selector).multiselect().deselect(1); // deselect element with value == 1
+$(selector).multiselect().setCheckBoxClick("checkboxAll", function(target, args) {
+    console.log("Checkbox 'Select All' was clicked and got value ", args.checked);
+});
+$(selector).multiselect().setCheckBoxClick("1", function(target, args) {
+    console.log("Checkbox for item with value '1' was clicked and got value ", args.checked);
+});
+// without jQuery
 document.multiselect(selector).selectAll();
 document.multiselect(selector).deselectAll();
-```
-Select and deselect particular element with value == 1
-```
 document.multiselect(selector).select(1);
 document.multiselect(selector).deselect(1);
-```
-Retrieve selected values
-```
-document.querySelector(selector).value; //any change goes immediately to original select[mulitple]
+document.multiselect(selector).setCheckBoxClick("checkboxAll", function(target, args) {
+    console.log("Checkbox 'Select All' was clicked and got value ", args.checked);
+});
+document.multiselect(selector).setCheckBoxClick("1", function(target, args) {
+    console.log("Checkbox for item with value '1' was clicked and got value ", args.checked);
+});
 ```
 ### Information on basic capabilities
 **Displaying count of already selected items**

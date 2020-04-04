@@ -185,6 +185,17 @@ Multiselect.prototype = {
 		this._updateText(this);
 	},
 
+	_checkboxClickEvents: {},
+	setCheckBoxClick(id, handler) {
+		if (typeof handler === "function") {
+			this._checkboxClickEvents[id] = handler;
+		} else {
+			console.error("Checkbox click handler for checkbox value=" + id + " is not a function");
+		}
+
+		return this;
+	},
+
 	//append required events
 	_appendEvents: function () {
 		var self = this;
@@ -252,11 +263,18 @@ Multiselect.prototype = {
 
 	_onCheckBoxChange: function (checkbox, self, event) {
 		if (!checkbox.dataset.multiselectElement) {
-			self._performSelectAll(checkbox, self);
+			var checkedState = self._performSelectAll(checkbox, self);
+
+			if (typeof self._checkboxClickEvents["checkboxAll"] === "function") {
+				self._checkboxClickEvents["checkboxAll"](checkbox, { checked: checkedState});
+			}
 		}
 		else {
-			self._performSelectItem(checkbox, self);
-			
+			var checkedState = self._performSelectItem(checkbox, self);
+			if (typeof self._checkboxClickEvents[checkedState.id] === "function") {
+				self._checkboxClickEvents[checkedState.id](checkbox, checkedState);
+			}
+
 			self._updateSelectAll(self);
 		}
 
@@ -269,12 +287,15 @@ Multiselect.prototype = {
 			self._itemCounter++;
 			m_helper.select(this._item.options[item.index]);
 			m_helper.setActive(checkbox.parentElement.parentElement);
+
+			return { id: item.id, checked: true };
 		}
-		else {
-			self._itemCounter--;
-			m_helper.deselect(this._item.options[item.index]);
-			m_helper.setUnactive(checkbox.parentElement.parentElement);
-		}
+
+		self._itemCounter--;
+		m_helper.deselect(this._item.options[item.index]);
+		m_helper.setUnactive(checkbox.parentElement.parentElement);
+
+		return { id: item.id, checked: false };
 	},
 	
 	_performSelectAll : function(checkbox, self) {
@@ -287,15 +308,16 @@ Multiselect.prototype = {
 				m_helper.select(self._item.options[e.index]);
 				m_helper.check(e.multiselectElement);
 			});
+			return true;
 		}
-		else {
-			self._itemCounter = 0;
-			m_helper.each(items, function(e) {
-				e.multiselectElement.parentElement.parentElement.classList.remove('active');
-				self._item.options[e.index].removeAttribute('selected');
-				m_helper.uncheck(e.multiselectElement);
-			});
-		}
+
+		self._itemCounter = 0;
+		m_helper.each(items, function(e) {
+			e.multiselectElement.parentElement.parentElement.classList.remove('active');
+			self._item.options[e.index].removeAttribute('selected');
+			m_helper.uncheck(e.multiselectElement);
+		});
+		return false;
 	},
 	
 	_updateSelectAll :function(self) {
