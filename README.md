@@ -28,7 +28,7 @@ It provides the following methods:
 | `selectAll()`  | Programmatically selects all elements  |
 | `deselectAll()` | Programmatically deselects all elements  |
 | `select(value)`  | Programmatically selects the element for option with passed value  |
-| `deselect()` | Programmatically deselects the element for option with passed value  |
+| `deselect(value)` | Programmatically deselects the element for option with passed value  |
 | `setCheckBoxClick(value, handler)` | Sets the click listener for checkbox with particular value, where `value=='checkboxAll'` stands for 'Select All' checkbox. Handler accepts two arguments - target and args. See examples below |
 #### Examples
 Programmatically selecting and deselecting items:
