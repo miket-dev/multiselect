@@ -124,6 +124,18 @@ Multiselect.prototype = {
 		return result;
 	},
 
+	destroy() {
+		m_helper.removeNode(this._getIdentifier());
+		m_helper.show(this._item);
+		
+		var index = window.multiselects._items.indexOf(this._item);
+		console.log("INDEX", index);
+		if (index > -1) {
+			window.multiselects._items.splice(index, 1);
+			window.multiselects.splice(index, 1);
+		}
+	},
+
 	_initSelectedFields: function () {
 		var itemResult = this._getItems().filter(function (obj) {
 			return obj.selected;

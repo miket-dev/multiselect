@@ -30,6 +30,7 @@ It provides the following methods:
 | `select(value)`  | Programmatically selects the element for option with passed value  |
 | `deselect(value)` | Programmatically deselects the element for option with passed value  |
 | `setCheckBoxClick(value, handler)` | Sets the click listener for checkbox with particular value, where `value=='checkboxAll'` stands for 'Select All' checkbox. Handler accepts two arguments - target and args. See examples below |
+| `destroy()` | Removes the element and returns to original `select[multiple]`. Allows to recreate item again. |
 #### Examples
 Programmatically selecting and deselecting items:
 ```
@@ -44,6 +45,7 @@ $(selector).multiselect().setCheckBoxClick("checkboxAll", function(target, args)
 $(selector).multiselect().setCheckBoxClick("1", function(target, args) {
     console.log("Checkbox for item with value '1' was clicked and got value ", args.checked);
 });
+$(selector).multiselect().destroy();
 // without jQuery
 document.multiselect(selector).selectAll();
 document.multiselect(selector).deselectAll();
@@ -55,6 +57,7 @@ document.multiselect(selector).setCheckBoxClick("checkboxAll", function(target, 
 document.multiselect(selector).setCheckBoxClick("1", function(target, args) {
     console.log("Checkbox for item with value '1' was clicked and got value ", args.checked);
 });
+document.multiselect(selector).destroy();
 ```
 ### Information on basic capabilities
 **Displaying count of already selected items**
