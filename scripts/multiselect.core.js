@@ -15,6 +15,8 @@
 	this._createUI();
 
 	this._appendEvents();
+
+	this._initSelectedFields();
 }
 
 Multiselect.prototype = {
@@ -130,7 +132,6 @@ Multiselect.prototype = {
 		m_helper.show(this._item);
 		
 		var index = window.multiselects._items.indexOf(this._item);
-		console.log("INDEX", index);
 		if (index > -1) {
 			window.multiselects._items.splice(index, 1);
 			window.multiselects.splice(index, 1);
@@ -147,8 +148,6 @@ Multiselect.prototype = {
 			m_helper.each(itemResult, function(e) {
 				self.select(e.id);
 			});
-		} else {
-			this.selectAll();
 		}
 		
 		this._hideList(this);
