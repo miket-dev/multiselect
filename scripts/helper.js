@@ -162,6 +162,9 @@ if (!m_helper)
 				evObj.initEvent('click', true, false);
 				element.dispatchEvent(evObj);
 			}
-		}
+		},
+		setDisabled: function(element, value) {
+			element.disabled = value;
+		},
 	};
 }

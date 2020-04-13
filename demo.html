@@ -21,6 +21,11 @@
 	<option value='5'>Item 5</option>
 </select>
 
+<div>
+	<button onclick="enable()">Enable</button>
+	<button onclick="disable()">Disable</button>
+</div>
+
 <script>
 	document.multiselect('#testSelect1')
 		.setCheckBoxClick("checkboxAll", function(target, args) {
@@ -29,5 +34,13 @@
 		.setCheckBoxClick("1", function(target, args) {
 			console.log("Checkbox for item with value '1' was clicked and got value ", args.checked);
 		});
+
+	function enable() {
+		document.multiselect('#testSelect1').setIsEnabled(true);
+	}
+
+	function disable() {
+		document.multiselect('#testSelect1').setIsEnabled(false);
+	}
 </script>
 </body>

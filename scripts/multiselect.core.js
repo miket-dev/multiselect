@@ -17,6 +17,8 @@
 	this._appendEvents();
 
 	this._initSelectedFields();
+
+	this._initIsEnabled();
 }
 
 Multiselect.prototype = {
@@ -77,7 +79,6 @@ Multiselect.prototype = {
 
 		return result;
 	},
-
 	//creates element list
 	_createItemList: function () {
 		var list = m_helper.create({ tag : 'ul'});
@@ -127,17 +128,6 @@ Multiselect.prototype = {
 		return result;
 	},
 
-	destroy() {
-		m_helper.removeNode(this._getIdentifier());
-		m_helper.show(this._item);
-		
-		var index = window.multiselects._items.indexOf(this._item);
-		if (index > -1) {
-			window.multiselects._items.splice(index, 1);
-			window.multiselects.splice(index, 1);
-		}
-	},
-
 	_initSelectedFields: function () {
 		var itemResult = this._getItems().filter(function (obj) {
 			return obj.selected;
@@ -153,12 +143,42 @@ Multiselect.prototype = {
 		this._hideList(this);
 	},
 
+	_initIsEnabled: function() {
+		this.setIsEnabled(!this._item.disabled)
+	},
+
+	destroy() {
+		m_helper.removeNode(this._getIdentifier());
+		m_helper.show(this._item);
+		
+		var index = window.multiselects._items.indexOf(this._item);
+		if (index > -1) {
+			window.multiselects._items.splice(index, 1);
+			window.multiselects.splice(index, 1);
+		}
+	},
+
 	select: function (val) {
 		this._toggle(val, true);
 	},
 	
 	deselect: function(val) {
 		this._toggle(val, false);
+	},
+
+	setIsEnabled(isEnabled) {
+		if (this._isEnabled === isEnabled) return;
+
+		var wrapperItem = document.getElementById(this._getIdentifier());
+		if (isEnabled) {
+			wrapperItem.classList.remove('disabled');
+		} else {
+			wrapperItem.classList.add('disabled');
+		}
+		m_helper.setDisabled(this._item, !isEnabled);
+		m_helper.setDisabled(document.getElementById(this._getInputFieldIdentifier()), !isEnabled);
+
+		this._isEnabled = isEnabled;
 	},
 	
 	_toggle: function(val, setCheck) {
@@ -415,6 +435,9 @@ Multiselect.prototype = {
 
 	//selected items counter
 	_itemCounter: 0,
+
+	//flag to set enable/disable of multiselect
+	_isEnabled: true,
 
 	//returns all items as js objects
 	_getItems: function () {

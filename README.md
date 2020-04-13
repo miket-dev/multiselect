@@ -29,6 +29,7 @@ It provides the following methods:
 | `deselectAll()` | Programmatically deselects all elements  |
 | `select(value)`  | Programmatically selects the element for option with passed value  |
 | `deselect(value)` | Programmatically deselects the element for option with passed value  |
+| `setIsEnabled(value)` | Accepts the boolean value indicating whether multiselect is enabled or not |
 | `setCheckBoxClick(value, handler)` | Sets the click listener for checkbox with particular value, where `value=='checkboxAll'` stands for 'Select All' checkbox. Handler accepts two arguments - target and args. See examples below |
 | `destroy()` | Removes the element and returns to original `select[multiple]`. Allows to recreate item again. |
 #### Examples
@@ -39,6 +40,8 @@ $(selector).multiselect().selectAll();
 $(selector).multiselect().deselectAll();
 $(selector).multiselect().select(1); // select element with value == 1
 $(selector).multiselect().deselect(1); // deselect element with value == 1
+$(selector).multiselect().setIsEnabled(false); // disables the select
+$(selector).multiselect().setIsEnabled(true); // enables the select
 $(selector).multiselect().setCheckBoxClick("checkboxAll", function(target, args) {
     console.log("Checkbox 'Select All' was clicked and got value ", args.checked);
 });
@@ -51,6 +54,8 @@ document.multiselect(selector).selectAll();
 document.multiselect(selector).deselectAll();
 document.multiselect(selector).select(1);
 document.multiselect(selector).deselect(1);
+document.multiselect(selector).setIsEnabled(false);
+document.multiselect(selector).setIsEnabled(true);
 document.multiselect(selector).setCheckBoxClick("checkboxAll", function(target, args) {
     console.log("Checkbox 'Select All' was clicked and got value ", args.checked);
 });
