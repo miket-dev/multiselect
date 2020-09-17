@@ -1,0 +1,24 @@
+{
+  "name": "multiselect",
+  "version": "1.0.0",
+  "description": "This project presents css + pure js implementation for multiselect html control.",
+  "main": "scripts/multiselect.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "cat scripts/*.js > concat.js && webpack && rm concat.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mneofit/multiselect.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mneofit/multiselect/issues"
+  },
+  "homepage": "https://github.com/mneofit/multiselect#readme",
+  "devDependencies": {
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12"
+  }
+}

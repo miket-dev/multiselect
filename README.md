@@ -87,3 +87,24 @@ Multiselect object provides public method for selecting/deselecting all data. So
 **Posting to server without any extensions**
 
 Multiselect is just a wrapper for built-in selects. So, you should pass `select[multiple]` and every interaction with dropdown list of multiselect will reflect in options of passed `select`. When you perform `POST` request, the original `select[multiple]` will be posted instead of generation of fake input fields.
+
+## Contributing
+To build `multiselect.min.js` from `scripts/*.js`, first install Webpack (you'll need to have [npm](https://www.npmjs.com/get-npm) installed):
+```$ npm install```
+Then run webpack
+```
+$ npm run build
+
+> multiselect@1.0.0 build /multiselect
+> cat scripts/\*.js > concat.js && webpack && rm concat.js
+
+Hash: 0a3514ea2dc70cf574d3
+Version: webpack 4.44.1
+Time: 318ms
+Built at: 09/16/2020 2:33:52 PM
+             Asset      Size  Chunks             Chunk Names
+multiselect.min.js  12.6 KiB       0  [emitted]  main
+Entrypoint main = multiselect.min.js
+[0] ./concat.js 19.1 KiB {0} [built]
+```
+
