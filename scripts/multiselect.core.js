@@ -123,6 +123,7 @@ Multiselect.prototype = {
 
 		label.appendChild(checkBox);
 		label.appendChild(textBox);
+		label.tabIndex = -1;
 		
 		result.appendChild(label);
 		return result;
@@ -139,8 +140,6 @@ Multiselect.prototype = {
 				self.select(e.id);
 			});
 		}
-		
-		this._hideList(this);
 	},
 
 	_initIsEnabled: function() {
@@ -231,19 +230,7 @@ Multiselect.prototype = {
 	//append required events
 	_appendEvents: function () {
 		var self = this;
-		document.getElementById(self._getInputFieldIdentifier()).addEventListener('focus', function (event) {
-			self._showList(self);
-			document.getElementById(self._getInputFieldIdentifier()).value = '';
-			m_helper.each(window.multiselects, function(e) {
-				if (document.getElementById(e._getItemListIdentifier()).offsetParent &&
-					m_helper.parent(event.target, e._getIdentifier())) {
-					e._hideList(self);
-				}
-			});
-		});
-
 		document.getElementById(self._getInputFieldIdentifier()).addEventListener('click', function () {
-			self._showList(self);
 			document.getElementById(self._getInputFieldIdentifier()).value = '';
 		});
 
@@ -255,10 +242,6 @@ Multiselect.prototype = {
 			}
 		});
 
-		document.getElementById(self._getItemListIdentifier()).addEventListener('mouseover', function () {
-			self._showList(self);
-		});
-		
 		m_helper.each(document.getElementById(self._getIdentifier()).querySelectorAll('.multiselect-checkbox'),
 			function(e) {
 				e.addEventListener('change', function(event) {
@@ -310,6 +293,7 @@ Multiselect.prototype = {
 			self._updateSelectAll(self);
 		}
 
+		self._updateText(self);
 		self._forceUpdate();
 	},
 	
@@ -362,19 +346,6 @@ Multiselect.prototype = {
 		}
 	},
 	
-	_hideList: function (context, event) {
-		m_helper.setUnactive(document.getElementById(context._getItemListIdentifier()));
-		
-		m_helper.show(document.getElementById(context._getItemListIdentifier()).querySelector('span'));
-		m_helper.show(document.getElementById(context._getItemListIdentifier()).querySelector('hr'));
-		m_helper.showAll(document.getElementById(context._getItemListIdentifier()).querySelectorAll('li'));
-
-		context._updateText(context);
-
-		if (event)
-			event.stopPropagation();
-	},
-	
 	_updateText : function(context) {
 		var activeItems = document.getElementById(context._getItemListIdentifier()).querySelectorAll('ul .active');
 		if (activeItems.length > 0) {
@@ -394,10 +365,6 @@ Multiselect.prototype = {
 			val = 'All selected';
 		}
 		document.getElementById(context._getInputFieldIdentifier()).value = val ? val : '';		
-	},
-
-	_showList: function (context) {
-		m_helper.setActive(document.getElementById(context._getItemListIdentifier()));
 	},
 
 	//updates counter

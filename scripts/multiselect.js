@@ -27,10 +27,6 @@ if (typeof ($) != 'undefined') {
 
 		return res.length == 1 ? res[0] : $(res);
 	};
-	
-	$(document).click(function (event) {
-		hideMultiselects(event);
-	});
 } else {
 	document.multiselect = function(selector) {
 		var res = [];
@@ -53,17 +49,4 @@ if (typeof ($) != 'undefined') {
 		
 		return res.length == 1 ? res[0] : res;
 	}
-	
-	window.onclick = function(event) {
-		hideMultiselects(event);
-	};
-}
-
-function hideMultiselects(event) {
-	m_helper.each(window.multiselects, function(e) {
-		if (document.getElementById(e._getItemListIdentifier()).offsetParent &&
-				!m_helper.parent(event.target, e._getIdentifier())) {
-			e._hideList(e, event);
-		}
-	});
 }
