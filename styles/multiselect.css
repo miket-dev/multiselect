@@ -17,6 +17,18 @@
 	font-weight : 600;
 }
 
+    /*
+     * Since we gave these labels a tabindex they can potentially get :focus or
+     * :active, and we don't want that to cause any new styling
+     */
+    .multiselect-wrapper label:focus {
+        outline: none;
+    }
+
+    .multiselect-wrapper label:active {
+        outline: none;
+    }
+
 .multiselect-wrapper .multiselect-list {
 	z-index: 1;
 	position: absolute;
@@ -28,7 +40,7 @@
 	margin-top: -2px;
 }
 
-	.multiselect-wrapper .multiselect-list.active {
+	.multiselect-wrapper:focus-within .multiselect-list {
 		display: block;
 	}
 
