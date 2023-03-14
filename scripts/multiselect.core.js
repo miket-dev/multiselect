@@ -315,8 +315,6 @@ Multiselect.prototype = {
 	
 	_performSelectItem : function(checkbox, self) {
 		this._item.dispatchEvent(new Event("change"));
-		
-		var item = JSON.parse(checkbox.dataset.multiselectElement);
 		if (checkbox.checked) {
 			self._itemCounter++;
 			m_helper.select(this._item.options[item.index]);
@@ -333,8 +331,6 @@ Multiselect.prototype = {
 	},
 	
 	_performSelectAll : function(checkbox, self) {
-		this._item.dispatchEvent(new Event("change"));
-
 		var items = self._getItems();
 
 		if (checkbox.checked) {
@@ -432,6 +428,8 @@ Multiselect.prototype = {
 				ddArrow.style.marginLeft = '-57px';
 			}
 		}
+
+		this._item.dispatchEvent(new Event("change"));
 	},
 
 	//internal representation of combo box items
